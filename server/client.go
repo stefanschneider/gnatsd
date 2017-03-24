@@ -1194,7 +1194,9 @@ func (c *client) processPingTimer() {
 	defer c.mu.Unlock()
 	c.ptmr = nil
 	// Check if we are ready yet..
-	if _, ok := c.nc.(*net.TCPConn); !ok {
+	switch c.nc.(type) {
+	case *net.TCPConn, *tls.Conn:
+	default:
 		return
 	}
 
